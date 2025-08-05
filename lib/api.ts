@@ -40,8 +40,8 @@ export const fetchNotes = async (
   return response.data;
 };
 
-// Отримання однієї нотатки за ID
-export const fetchNoteById = async (id: number): Promise<Note> => {
+
+export const fetchNoteById = async (id: string): Promise<Note> => {
   const response = await axios.get<Note>(`${BASE_URL}/${id}`, {
     headers: getAuthHeader(),
   });
@@ -55,7 +55,7 @@ export const createNote = async (note: CreateNoteParams): Promise<Note> => {
   return response.data;
 };
 
-export const deleteNote = async (id: number): Promise<Note> => {
+export const deleteNote = async (id: string): Promise<Note> => {
   const response = await axios.delete<Note>(`${BASE_URL}/${id}`, {
     headers: getAuthHeader(), 
   });

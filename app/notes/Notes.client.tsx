@@ -5,16 +5,22 @@ import { useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-quer
 import { useDebounce } from 'use-debounce';
 import { fetchNotes } from '@/lib/api';
 
-
 import NoteList from '@/components/NoteList/NoteList';
 import Pagination from '@/components/Pagination/Pagination';
 import SearchBox from '@/components/SearchBox/SearchBox';
-import Modal from '@/components/Modal/NoteModal';
+import Modal from '@/components/Modal/Modal';
 import NoteForm from '@/components/NoteForm/NoteForm';
-
+import { Note } from '@/types/note';
 import css from './notes.module.css';
 
-export default function Notes() {
+
+
+interface NotesProps {
+  initialNotes: Note[];
+  initialTotalPages: number;
+}
+
+export default function Notes({ initialNotes, initialTotalPages }: NotesProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500);
@@ -32,6 +38,10 @@ export default function Notes() {
       }),
     staleTime: 5 * 60 * 1000,
     placeholderData: keepPreviousData,
+    initialData: {
+      notes: initialNotes,
+      totalPages: initialTotalPages,
+    },
   });
 
   const handlePageChange = (selectedItem: { selected: number }) => {
@@ -100,5 +110,6 @@ export default function Notes() {
     </div>
   );
 }
+
 
 
