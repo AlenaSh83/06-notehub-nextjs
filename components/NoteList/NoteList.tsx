@@ -11,21 +11,23 @@ interface NoteListProps {
 const NoteList: React.FC<NoteListProps> = ({ notes }) => {
   const queryClient = useQueryClient();
   
-  const deleteMutation = useMutation<Note, Error, number>({
-    mutationFn: deleteNote,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notes'] });
-    },
-    onError: (error) => {
-      console.error('Failed to delete note:', error);
-    },
-  });
+  const deleteMutation = useMutation<Note, Error, string>({
+  mutationFn: deleteNote,
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['notes'] });
+  },
+  onError: (error) => {
+    console.error('Failed to delete note:', error);
+  },
+});
 
-  const handleDeleteNote = (id: number) => {
-    if (window.confirm('Are you sure you want to delete this note?')) {
-      deleteMutation.mutate(id);
-    }
-  };
+
+  const handleDeleteNote = (id: string) => {
+  if (window.confirm('Are you sure you want to delete this note?')) {
+    deleteMutation.mutate(id);
+  }
+};
+
 
   return (
     <ul className={css.list}>

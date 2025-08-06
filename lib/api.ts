@@ -57,10 +57,13 @@ export const createNote = async (note: CreateNoteParams): Promise<Note> => {
 
 export const deleteNote = async (id: string): Promise<Note> => {
   const response = await axios.delete<Note>(`${BASE_URL}/${id}`, {
-    headers: getAuthHeader(), 
+    headers: getAuthHeader(),
   });
   return response.data;
 };
+
+
+
 
 const noteService = {
   fetchNotes,
