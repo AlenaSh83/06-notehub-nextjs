@@ -6,7 +6,8 @@ interface NoteDetailsPageProps {
   params: { id: string };
 }
 
-export default async function NoteDetailsPage({ params }: NoteDetailsPageProps) {
+export default async function NoteDetailsPage(props: Promise<NoteDetailsPageProps>) {
+  const { params } = await props;
   const noteId = params.id;
 
   const queryClient = new QueryClient();
@@ -26,7 +27,6 @@ export default async function NoteDetailsPage({ params }: NoteDetailsPageProps) 
     </HydrationBoundary>
   );
 }
-
 
 
 
