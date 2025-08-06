@@ -3,14 +3,13 @@ import { fetchNoteById } from '@/lib/api';
 import NoteDetailsClient from './NoteDetails.client';
 
 interface NoteDetailsPageProps {
-  params: {
-    id: string;
-  };
+  params: { id: string };
 }
 
 export default async function NoteDetailsPage({ params }: NoteDetailsPageProps) {
+  const noteId = params.id;
+
   const queryClient = new QueryClient();
-  const noteId = params.id; 
 
   try {
     await queryClient.prefetchQuery({
@@ -18,7 +17,7 @@ export default async function NoteDetailsPage({ params }: NoteDetailsPageProps) 
       queryFn: () => fetchNoteById(noteId),
     });
   } catch (error) {
-    
+    console.error('Failed to fetch note', error);
   }
 
   return (
@@ -27,3 +26,8 @@ export default async function NoteDetailsPage({ params }: NoteDetailsPageProps) 
     </HydrationBoundary>
   );
 }
+
+
+
+
+
