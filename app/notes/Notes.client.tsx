@@ -29,19 +29,13 @@ export default function Notes({ initialNotes, initialTotalPages }: NotesProps) {
   const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['notes', currentPage, debouncedSearchTerm],
-    queryFn: () =>
-      fetchNotes({
+    queryKey: ['notes', debouncedSearchTerm, currentPage],
+    queryFn: () => fetchNotes({
         page: currentPage,
         perPage: 12,
         search: debouncedSearchTerm,
       }),
-    staleTime: 5 * 60 * 1000,
     placeholderData: keepPreviousData,
-    initialData: {
-      notes: initialNotes,
-      totalPages: initialTotalPages,
-    },
   });
 
   const handlePageChange = (selectedItem: { selected: number }) => {
