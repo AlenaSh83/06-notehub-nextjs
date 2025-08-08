@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { Note, CreateNoteParams } from '../types/note';
 
-axios.defaults.baseURL = "https://notehub-public.goit.study/api";
+axios.defaults.baseURL = 'https://notehub-public.goit.study/api/notes';
 
 const TOKEN = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
