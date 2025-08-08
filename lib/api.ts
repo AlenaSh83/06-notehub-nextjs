@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { Note, CreateNoteParams } from '../types/note';
 
-const BASE_URL = 'https://notehub-public.goit.study/api/notes';
+axios.defaults.baseURL = "https://notehub-public.goit.study/api";
 
 const TOKEN = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
@@ -32,7 +32,7 @@ export const fetchNotes = async (
   }
 
   const response = await axios.get<NotesApiResponse>(
-    `${BASE_URL}?${queryParams.toString()}`,
+    `${axios.defaults.baseURL}?${queryParams.toString()}`,
     {
       headers: getAuthHeader(), 
     }
@@ -42,21 +42,21 @@ export const fetchNotes = async (
 
 
 export const fetchNoteById = async (id: string): Promise<Note> => {
-  const response = await axios.get<Note>(`${BASE_URL}/${id}`, {
+  const response = await axios.get<Note>(`${axios.defaults.baseURL}/${id}`, {
     headers: getAuthHeader(),
   });
   return response.data;
 };
 
 export const createNote = async (note: CreateNoteParams): Promise<Note> => {
-  const response = await axios.post<Note>(`${BASE_URL}`, note, {
+  const response = await axios.post<Note>(`${axios.defaults.baseURL}`, note, {
     headers: getAuthHeader(), 
   });
   return response.data;
 };
 
 export const deleteNote = async (id: string): Promise<Note> => {
-  const response = await axios.delete<Note>(`${BASE_URL}/${id}`, {
+  const response = await axios.delete<Note>(`${axios.defaults.baseURL}/${id}`, {
     headers: getAuthHeader(),
   });
   return response.data;
