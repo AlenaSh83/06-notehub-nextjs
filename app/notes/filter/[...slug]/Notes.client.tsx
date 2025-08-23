@@ -11,7 +11,7 @@ import SearchBox from '@/components/SearchBox/SearchBox';
 import Modal from '@/components/Modal/Modal';
 import NoteForm from '@/components/NoteForm/NoteForm';
 import { Note } from '@/types/note';
-import css from './NotePage.module.css';
+import css from '../NotePage.module.css';
 
 interface NotesProps {
   initialNotes?: Note[];         
