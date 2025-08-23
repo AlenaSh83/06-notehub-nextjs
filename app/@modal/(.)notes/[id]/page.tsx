@@ -3,12 +3,15 @@ import Modal from "@/components/Modal/Modal";
 import NotePreview from "@/components/NotePreview/NotePreview";
 import { redirect } from "next/navigation";
 
-interface Props {
-  params: { id: string };
+interface NoteModalPageProps {
+  params: Promise<{ id: string }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
 
-export default async function NoteModalPage({ params }: Props) {
-  const note = await fetchNoteById(params.id);
+export default async function NoteModalPage({ params }: NoteModalPageProps) {
+  
+  const resolvedParams = await params;
+  const note = await fetchNoteById(resolvedParams.id);
 
   if (!note) {
     redirect("/notes"); 
@@ -20,4 +23,5 @@ export default async function NoteModalPage({ params }: Props) {
     </Modal>
   );
 }
+
 

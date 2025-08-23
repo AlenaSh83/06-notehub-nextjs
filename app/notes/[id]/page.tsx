@@ -5,11 +5,11 @@ import Modal from '@/components/Modal/Modal';
 import { redirect } from 'next/navigation';
 
 interface NoteModalPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>; 
 }
 
 export default async function NoteModalPage({ params }: NoteModalPageProps) {
-  const { id } = params;
+  const { id } = await params; 
 
   const queryClient = new QueryClient();
 
@@ -31,7 +31,6 @@ export default async function NoteModalPage({ params }: NoteModalPageProps) {
     </Modal>
   );
 }
-
 
 
 
