@@ -1,4 +1,4 @@
-import Notes from "../Notes.client";
+import Notes from "./Notes.client";
 import type { NoteTag } from "../../../../types/note"; 
 
 interface NotesPageProps {
