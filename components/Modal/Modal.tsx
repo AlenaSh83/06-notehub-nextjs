@@ -1,3 +1,4 @@
+'use client';
 
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
@@ -40,7 +41,14 @@ const Modal: React.FC<ModalProps> = ({ children, onClose }) => {
       aria-modal="true"
       onClick={handleBackdropClick}
     >
-      <div className={css.modal}>
+      <div className={css.modal} onClick={(e) => e.stopPropagation()}>
+        <button
+          className={css.closeButton}
+          onClick={onClose}
+          aria-label="Close modal"
+        >
+          ✖
+        </button>
         {children}
       </div>
     </div>,

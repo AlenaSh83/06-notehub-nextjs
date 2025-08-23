@@ -13,16 +13,15 @@ import NoteForm from '@/components/NoteForm/NoteForm';
 import { Note } from '@/types/note';
 import css from './NotePage.module.css';
 
-
-
 interface NotesProps {
-  initialNotes: Note[];
-  initialTotalPages: number;
+  initialNotes?: Note[];         
+  initialTotalPages?: number;     
+  tag?: string;
 }
 
-export default function Notes({ initialNotes, initialTotalPages }: NotesProps) {
+export default function Notes({ initialNotes = [], initialTotalPages = 0, tag }: NotesProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(tag || '');
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -30,7 +29,8 @@ export default function Notes({ initialNotes, initialTotalPages }: NotesProps) {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['notes', debouncedSearchTerm, currentPage],
-    queryFn: () => fetchNotes({
+    queryFn: () =>
+      fetchNotes({
         page: currentPage,
         perPage: 12,
         search: debouncedSearchTerm,
@@ -60,8 +60,8 @@ export default function Notes({ initialNotes, initialTotalPages }: NotesProps) {
     setIsModalOpen(false);
   };
 
-  const notes = data?.notes || [];
-  const totalPages = data?.totalPages || 0;
+  const notes = data?.notes || initialNotes;
+  const totalPages = data?.totalPages || initialTotalPages;
 
   if (error) {
     return <div className={css.error}>Error loading notes. Please try again later.</div>;
@@ -104,6 +104,7 @@ export default function Notes({ initialNotes, initialTotalPages }: NotesProps) {
     </div>
   );
 }
+
 
 
 

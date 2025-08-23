@@ -1,13 +1,15 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { fetchNoteById } from '@/lib/api';
 import NoteDetailsClient from './NoteDetails.client';
+import Modal from '@/components/Modal/Modal';
+import { redirect } from 'next/navigation';
 
-interface NoteDetailsPageProps {
-  params: Promise<{ id: string }>;
+interface NoteModalPageProps {
+  params: { id: string };
 }
 
-export default async function NoteDetailsPage({ params }: NoteDetailsPageProps) {
-  const { id } = await params;
+export default async function NoteModalPage({ params }: NoteModalPageProps) {
+  const { id } = params;
 
   const queryClient = new QueryClient();
 
@@ -17,13 +19,16 @@ export default async function NoteDetailsPage({ params }: NoteDetailsPageProps) 
       queryFn: () => fetchNoteById(id),
     });
   } catch (error) {
-    console.error('Failed to fetch note', error);
+    console.error('Failed to fetch note in modal', error);
+    redirect('/notes'); 
   }
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <NoteDetailsClient />
-    </HydrationBoundary>
+    <Modal onClose={() => redirect('/notes')}>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <NoteDetailsClient />
+      </HydrationBoundary>
+    </Modal>
   );
 }
 
