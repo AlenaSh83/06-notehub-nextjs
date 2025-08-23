@@ -1,6 +1,6 @@
 import { fetchNotes } from '@/lib/api';
 import Notes from './[...slug]/Notes.client'; 
-import css from './NotePage.module.css';
+import css from '../NotePage.module.css';
 
 export const dynamic = 'force-dynamic';
 
