@@ -13,6 +13,7 @@ interface FetchNotesParams {
   page?: number;
   perPage?: number;
   search?: string;
+  tag?: string; 
 }
 
 interface NotesApiResponse {
@@ -23,12 +24,19 @@ interface NotesApiResponse {
 export const fetchNotes = async (
   params: FetchNotesParams = {}
 ): Promise<NotesApiResponse> => {
-  const { page = 1, perPage = 12, search = '' } = params;
+  const { page = 1, perPage = 12, search = '', tag } = params;
   const queryParams = new URLSearchParams();
+  
   queryParams.append('page', page.toString());
   queryParams.append('perPage', perPage.toString());
+  
   if (search) {
     queryParams.append('search', search);
+  }
+  
+  
+  if (tag) {
+    queryParams.append('tag', tag);
   }
 
   const response = await axios.get<NotesApiResponse>(
@@ -39,7 +47,6 @@ export const fetchNotes = async (
   );
   return response.data;
 };
-
 
 export const fetchNoteById = async (id: string): Promise<Note> => {
   const response = await axios.get<Note>(`${axios.defaults.baseURL}/${id}`, {
@@ -61,9 +68,6 @@ export const deleteNote = async (id: string): Promise<Note> => {
   });
   return response.data;
 };
-
-
-
 
 const noteService = {
   fetchNotes,

@@ -16,24 +16,28 @@ import css from '../NotePage.module.css';
 interface NotesProps {
   initialNotes?: Note[];         
   initialTotalPages?: number;     
-  tag?: string;
+  tag?: string; 
 }
 
 export default function Notes({ initialNotes = [], initialTotalPages = 0, tag }: NotesProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState(tag || '');
+  const [searchTerm, setSearchTerm] = useState(''); 
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
+  
+  const tagFilter = tag && tag !== 'All' ? tag : undefined;
+
   const { data, isLoading, error } = useQuery({
-    queryKey: ['notes', debouncedSearchTerm, currentPage],
+    queryKey: ['notes', debouncedSearchTerm, currentPage, tagFilter], 
     queryFn: () =>
       fetchNotes({
         page: currentPage,
         perPage: 12,
         search: debouncedSearchTerm,
+        tag: tagFilter, 
       }),
     placeholderData: keepPreviousData,
   });
@@ -84,6 +88,8 @@ export default function Notes({ initialNotes = [], initialTotalPages = 0, tag }:
         <div className={css.empty}>
           {searchTerm
             ? 'No notes found for your search.'
+            : tagFilter 
+            ? `No notes found for tag "${tag}".`
             : 'No notes yet. Create your first note!'}
         </div>
       )}
