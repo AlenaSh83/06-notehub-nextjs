@@ -1,5 +1,5 @@
+
 import { fetchNoteById } from "@/lib/api";
-import Modal from "@/components/Modal/Modal";
 import NotePreview from "@/app/@modal/(.)notes/[id]/NotePreview.client";
 import { redirect } from "next/navigation";
 
@@ -16,10 +16,6 @@ export default async function NoteModalPage({ params }: Props) {
     redirect("/notes"); 
   }
   
-  return (
-    <Modal onClose={() => redirect("/notes")}>
-      <NotePreview note={note} onClose={() => redirect("/notes")} />
-    </Modal>
-  );
+  return <NotePreview note={note} />;
 }
 
