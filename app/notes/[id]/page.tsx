@@ -1,11 +1,41 @@
+import { Metadata } from 'next';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { fetchNoteById } from '@/lib/api';
 import NoteDetailsClient from './NoteDetails.client';
 import Modal from '@/components/Modal/Modal';
 import { redirect } from 'next/navigation';
+import type { Note } from '@/types/note';
 
 interface NoteModalPageProps {
   params: Promise<{ id: string }>; 
+}
+
+export async function generateMetadata({ params }: NoteModalPageProps): Promise<Metadata> {
+  const { id } = await params;
+  
+  try {
+    const note: Note = await fetchNoteById(id);
+    
+    const description = note.content.length > 157 
+      ? `${note.content.substring(0, 157)}...` 
+      : note.content;
+
+    return {
+      title: `${note.title} | NoteHub`,
+      description,
+      openGraph: {
+        title: `${note.title} | NoteHub`,
+        description,
+        url: `https://06-notehub-nextjs-rho-gray.vercel.app/notes/${id}`,
+        images: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
+      },
+    };
+  } catch {
+    return {
+      title: 'Note Not Found | NoteHub',
+      description: 'The requested note could not be found.',
+    };
+  }
 }
 
 export default async function NoteModalPage({ params }: NoteModalPageProps) {
@@ -31,7 +61,6 @@ export default async function NoteModalPage({ params }: NoteModalPageProps) {
     </Modal>
   );
 }
-
 
 
 

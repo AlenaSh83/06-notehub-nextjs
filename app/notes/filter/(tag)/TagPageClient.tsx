@@ -1,18 +1,17 @@
-
 "use client";
 
-import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { fetchNotes } from "@/lib/api";
 
-export default function TagPage() {
-  const params = useParams();
-  const tag = params?.tag as string;
+interface TagPageClientProps {
+  tag: string;
+}
 
+export default function TagPageClient({ tag }: TagPageClientProps) {
   const { data, isLoading } = useQuery({
     queryKey: ["notes", tag],
     queryFn: () =>
-      fetchNotes(tag === "All" ? {} : { search: tag }),
+      fetchNotes(tag === "All" ? {} : { tag: tag }), // Змінено з search на tag
   });
 
   if (isLoading) return <p>Loading...</p>;
@@ -35,4 +34,3 @@ export default function TagPage() {
     </div>
   );
 }
-

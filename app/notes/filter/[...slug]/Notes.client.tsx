@@ -1,15 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
+import Link from 'next/link';
 import { fetchNotes } from '@/lib/api';
 
 import NoteList from '@/components/NoteList/NoteList';
 import Pagination from '@/components/Pagination/Pagination';
 import SearchBox from '@/components/SearchBox/SearchBox';
-import Modal from '@/components/Modal/Modal';
-import NoteForm from '@/components/NoteForm/NoteForm';
 import { Note } from '@/types/note';
 import css from '../NotePage.module.css';
 
@@ -23,11 +22,7 @@ export default function Notes({ initialNotes = [], initialTotalPages = 0, tag }:
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState(''); 
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const queryClient = useQueryClient();
-
-  
   const tagFilter = tag && tag !== 'All' ? tag : undefined;
 
   const { data, isLoading, error } = useQuery({
@@ -51,19 +46,6 @@ export default function Notes({ initialNotes = [], initialTotalPages = 0, tag }:
     setCurrentPage(1);
   };
 
-  const handleCreateNote = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleNoteCreated = () => {
-    queryClient.invalidateQueries({ queryKey: ['notes'] });
-    setIsModalOpen(false);
-  };
-
   const notes = data?.notes || initialNotes;
   const totalPages = data?.totalPages || initialTotalPages;
 
@@ -75,9 +57,9 @@ export default function Notes({ initialNotes = [], initialTotalPages = 0, tag }:
     <div className={css.container}>
       <div className={css.toolbar}>
         <SearchBox value={searchTerm} onChange={handleSearchChange} />
-        <button className={css.button} onClick={handleCreateNote}>
+        <Link href="/notes/action/create" className={css.button}>
           Create note +
-        </button>
+        </Link>
       </div>
 
       {isLoading && <div className={css.loading}>Loading notes...</div>}
@@ -100,12 +82,6 @@ export default function Notes({ initialNotes = [], initialTotalPages = 0, tag }:
           currentPage={currentPage - 1}
           onPageChange={handlePageChange}
         />
-      )}
-
-      {isModalOpen && (
-        <Modal onClose={handleCloseModal}>
-          <NoteForm onCancel={handleCloseModal} onSubmit={handleNoteCreated} />
-        </Modal>
       )}
     </div>
   );

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Головна сторінка -->
+  <url>
+    <loc>https://06-notehub-nextjs-rho-gray.vercel.app/</loc>
+    <lastmod>2024-08-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Сторінка всіх нотаток -->
+  <url>
+    <loc>https://06-notehub-nextjs-rho-gray.vercel.app/notes/filter</loc>
+    <lastmod>2024-08-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Фільтр: All Notes -->
+  <url>
+    <loc>https://06-notehub-nextjs-rho-gray.vercel.app/notes/filter/All</loc>
+    <lastmod>2024-08-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Фільтр: Todo -->
+  <url>
+    <loc>https://06-notehub-nextjs-rho-gray.vercel.app/notes/filter/Todo</loc>
+    <lastmod>2024-08-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Фільтр: Work -->
+  <url>
+    <loc>https://06-notehub-nextjs-rho-gray.vercel.app/notes/filter/Work</loc>
+    <lastmod>2024-08-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Фільтр: Personal -->
+  <url>
+    <loc>https://06-notehub-nextjs-rho-gray.vercel.app/notes/filter/Personal</loc>
+    <lastmod>2024-08-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Фільтр: Meeting -->
+  <url>
+    <loc>https://06-notehub-nextjs-rho-gray.vercel.app/notes/filter/Meeting</loc>
+    <lastmod>2024-08-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Фільтр: Shopping -->
+  <url>
+    <loc>https://06-notehub-nextjs-rho-gray.vercel.app/notes/filter/Shopping</loc>
+    <lastmod>2024-08-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>
