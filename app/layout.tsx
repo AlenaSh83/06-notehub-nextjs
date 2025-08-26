@@ -6,7 +6,6 @@ import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
 import { Toaster } from 'react-hot-toast';
 
-// Налаштування шрифта Roboto
 const roboto = Roboto({
   weight: ['300', '400', '500', '700', '900'],
   subsets: ['latin', 'cyrillic'],
@@ -22,7 +21,14 @@ export const metadata: Metadata = {
     title: 'NoteHub - Your Personal Note Management System',
     description: 'Manage your notes efficiently with NoteHub. Organize, search, and access your personal notes in one place.',
     url: 'https://06-notehub-nextjs-rho-gray.vercel.app',
-    images: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
+    images: [
+      {
+        url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'NoteHub - Note Management System',
+      }
+    ],
     type: 'website',
     siteName: 'NoteHub',
   },
