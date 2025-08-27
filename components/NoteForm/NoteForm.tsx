@@ -17,10 +17,10 @@ const NoteForm: React.FC<NoteFormProps> = ({ onCancel, onSubmit }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   
-  // Отримуємо функції зі стору
+  
   const { draft, setDraft, clearDraft } = useNoteStore();
   
-  // Ініціалізуємо форму з draft або початковими значеннями
+  
   const [formData, setFormData] = useState<CreateNoteParams>({
     title: draft.title || '',
     content: draft.content || '',
@@ -29,7 +29,7 @@ const NoteForm: React.FC<NoteFormProps> = ({ onCancel, onSubmit }) => {
   
   const [errors, setErrors] = useState<Partial<CreateNoteParams>>({});
 
-  // Оновлюємо формData коли draft змінюється
+ 
   useEffect(() => {
     setFormData({
       title: draft.title || '',
@@ -42,12 +42,12 @@ const NoteForm: React.FC<NoteFormProps> = ({ onCancel, onSubmit }) => {
     mutationFn: createNote,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
-      // Очищаємо чернетку після успішного створення
+      
       clearDraft();
       if (onSubmit) {
         onSubmit();
       } else {
-        router.push('/notes/filter');
+        router.push('/notes/filter/All');
       }
     },
     onError: (error) => {
@@ -89,19 +89,19 @@ const NoteForm: React.FC<NoteFormProps> = ({ onCancel, onSubmit }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     
-    // Оновлюємо локальний стан
+    
     const updatedData = {
       ...formData,
       [name]: value,
     };
     setFormData(updatedData);
     
-    // Зберігаємо в draft одразу при зміні
+    
     setDraft({
       [name]: value,
     });
     
-    // Очищаємо помилку для цього поля
+    
     if (errors[name as keyof CreateNoteParams]) {
       setErrors(prev => ({
         ...prev,
@@ -111,7 +111,7 @@ const NoteForm: React.FC<NoteFormProps> = ({ onCancel, onSubmit }) => {
   };
 
   const handleCancel = () => {
-    // При Cancel НЕ очищаємо draft
+    
     if (onCancel) {
       onCancel();
     } else {
