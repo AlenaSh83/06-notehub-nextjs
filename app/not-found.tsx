@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import css from "./not-found.module.css";
+import css from './not-found.module.css';
 
 export const metadata: Metadata = {
   title: '404 - Page Not Found | NoteHub',

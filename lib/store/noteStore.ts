@@ -30,7 +30,7 @@ export const useNoteStore = create<NoteStore>()(
       clearDraft: () => set({ draft: initialDraft }),
     }),
     {
-      name: 'note-draft-storage', 
+      name: 'note-draft-storage',
     }
   )
 );

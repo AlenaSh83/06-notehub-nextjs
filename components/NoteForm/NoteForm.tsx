@@ -4,7 +4,7 @@ import React, { useState, FormEvent, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import type { CreateNoteParams, NoteTag } from '../../types/note';
-import { createNote } from '../../lib/api';
+import { createNote } from '@/lib/api/clientApi';
 import { useNoteStore } from '@/lib/store/noteStore';
 import css from './NoteForm.module.css';
 
@@ -16,20 +16,17 @@ interface NoteFormProps {
 const NoteForm: React.FC<NoteFormProps> = ({ onCancel, onSubmit }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  
-  
+
   const { draft, setDraft, clearDraft } = useNoteStore();
-  
-  
+
   const [formData, setFormData] = useState<CreateNoteParams>({
     title: draft.title || '',
     content: draft.content || '',
     tag: (draft.tag || 'Todo') as NoteTag,
   });
-  
+
   const [errors, setErrors] = useState<Partial<CreateNoteParams>>({});
 
- 
   useEffect(() => {
     setFormData({
       title: draft.title || '',
@@ -42,7 +39,7 @@ const NoteForm: React.FC<NoteFormProps> = ({ onCancel, onSubmit }) => {
     mutationFn: createNote,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
-      
+
       clearDraft();
       if (onSubmit) {
         onSubmit();
@@ -57,7 +54,7 @@ const NoteForm: React.FC<NoteFormProps> = ({ onCancel, onSubmit }) => {
 
   const validateForm = (): boolean => {
     const newErrors: Partial<CreateNoteParams> = {};
-    
+
     if (!formData.title) {
       newErrors.title = 'Title is required';
     } else if (formData.title.length < 3) {
@@ -65,45 +62,46 @@ const NoteForm: React.FC<NoteFormProps> = ({ onCancel, onSubmit }) => {
     } else if (formData.title.length > 50) {
       newErrors.title = 'Title must be at most 50 characters';
     }
-    
+
     if (formData.content && formData.content.length > 500) {
       newErrors.content = 'Content must be at most 500 characters';
     }
-    
+
     if (!formData.tag) {
       newErrors.tag = 'Tag is required';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       createMutation.mutate(formData);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
-    
-    
+
     const updatedData = {
       ...formData,
       [name]: value,
     };
     setFormData(updatedData);
-    
-    
+
     setDraft({
       [name]: value,
     });
-    
-    
+
     if (errors[name as keyof CreateNoteParams]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
         [name]: undefined,
       }));
@@ -111,7 +109,6 @@ const NoteForm: React.FC<NoteFormProps> = ({ onCancel, onSubmit }) => {
   };
 
   const handleCancel = () => {
-    
     if (onCancel) {
       onCancel();
     } else {

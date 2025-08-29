@@ -35,3 +35,16 @@
 .navigation li a:hover {
   color: #ddd;
 }
+
+.logoutButton {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.logoutButton:hover {
+  opacity: 0.8;
+}
