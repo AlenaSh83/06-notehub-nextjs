@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { fetchNoteById } from '@/lib/api/clientApi';
-import NotePreview from '@/app/(private-routes)/@modal/(.)notes/[id]/NotePreview.client';
+import NotePreview from '@/app/(private routes)/@modal/(.)notes/[id]/NotePreview.client';
 import { redirect } from 'next/navigation';
 import type { Note } from '@/types/note';
 
