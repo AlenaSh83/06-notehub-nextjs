@@ -4,7 +4,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query';
-import { fetchNoteById } from '@/lib/api/clientApi';
+import { serverNotesService } from '@/lib/api/serverApi';
 import NoteDetailsClient from './NoteDetails.client';
 import Modal from '@/components/Modal/Modal';
 import { redirect } from 'next/navigation';
@@ -20,7 +20,7 @@ export async function generateMetadata({
   const { id } = await params;
 
   try {
-    const note: Note = await fetchNoteById(id);
+    const note: Note = await serverNotesService.fetchNoteById(id);
 
     const description =
       note.content.length > 157
@@ -53,7 +53,7 @@ export default async function NoteModalPage({ params }: NoteModalPageProps) {
   try {
     await queryClient.prefetchQuery({
       queryKey: ['note', id],
-      queryFn: () => fetchNoteById(id),
+      queryFn: () => serverNotesService.fetchNoteById(id),
     });
   } catch (error) {
     console.error('Failed to fetch note in modal', error);

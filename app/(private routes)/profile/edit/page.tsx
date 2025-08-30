@@ -13,14 +13,14 @@ export default function EditProfilePage() {
   const { user, setUser } = useAuthStore();
   const [username, setUsername] = useState('');
 
-  useEffect(() => {
-    if (user?.name) {
-      setUsername(user.name);
+   useEffect(() => {
+    if (user?.username) {
+      setUsername(user.username);
     }
   }, [user]);
 
   const updateMutation = useMutation({
-    mutationFn: (name: string) => authService.updateProfile({ name }),
+    mutationFn: (username: string) => authService.updateProfile({ username }),
     onSuccess: (updatedUser) => {
       setUser(updatedUser);
       router.push('/profile');

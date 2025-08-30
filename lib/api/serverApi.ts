@@ -1,66 +1,41 @@
 import { cookies } from 'next/headers';
+import axios from 'axios';
 import type { User } from '@/types/user';
 import type { Note } from '@/types/note';
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL + '/api';
-const externalBaseURL = 'https://notehub-api.goit.study';
 
-async function serverFetch(endpoint: string, options: RequestInit = {}) {
+
+const serverApiClient = axios.create({
+  baseURL,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+
+serverApiClient.interceptors.request.use((config) => {
   const cookieStore = cookies();
   const cookieHeader = cookieStore.toString();
-
-  const response = await fetch(`${baseURL}${endpoint}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      Cookie: cookieHeader,
-      ...options.headers,
-    },
-    credentials: 'include',
-  });
-
-  if (!response.ok && response.status !== 401) {
-    throw new Error(`API error: ${response.status}`);
+  
+  if (cookieHeader) {
+    config.headers.Cookie = cookieHeader;
   }
-
-  const data = await response.json();
-  return data;
-}
-
-async function externalServerFetch(
-  endpoint: string,
-  options: RequestInit = {}
-) {
-  const cookieStore = cookies();
-  const cookieHeader = cookieStore.toString();
-
-  const response = await fetch(`${externalBaseURL}${endpoint}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      Cookie: cookieHeader,
-      ...options.headers,
-    },
-    credentials: 'include',
-  });
-
-  if (!response.ok) {
-    throw new Error(`API error: ${response.status}`);
-  }
-
-  const data = await response.json();
-  return data;
-}
+  
+  return config;
+});
 
 export const serverAuthService = {
   async getProfile(): Promise<User> {
-    return serverFetch('/users/me');
+    const { data } = await serverApiClient.get<User>('/users/me');
+    return data;
   },
 
-  async getSession(): Promise<User | null> {
+  async getSession() {
     try {
-      const data = await serverFetch('/auth/session');
-      return data.user || null;
+      const response = await serverApiClient.get('/auth/session');
+      return response; 
     } catch {
       return null;
     }
@@ -84,10 +59,12 @@ export const serverNotesService = {
     }
 
     const query = queryParams.toString();
-    return externalServerFetch(`/notes${query ? `?${query}` : ''}`);
+    const { data } = await serverApiClient.get(`/notes${query ? `?${query}` : ''}`);
+    return data;
   },
 
   async fetchNoteById(id: string): Promise<Note> {
-    return externalServerFetch(`/notes/${id}`);
+    const { data } = await serverApiClient.get<Note>(`/notes/${id}`);
+    return data; 
   },
 };

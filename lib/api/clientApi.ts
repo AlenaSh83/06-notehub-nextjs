@@ -1,4 +1,4 @@
-import { apiClient, externalApi } from './api';
+import { apiClient } from './api';
 import type { User, AuthCredentials } from '@/types/user';
 import type { Note, CreateNoteParams } from '@/types/note';
 
@@ -37,13 +37,14 @@ export const authService = {
       return null;
     }
   },
+  
   async updateProfile(userData: Partial<User>) {
     const { data } = await apiClient.patch('/users/me', userData);
     return data;
   },
 };
 
-// Notes функції - прямі запити на зовнішній API
+
 export const notesService = {
   async fetchNotes(params: FetchNotesParams = {}): Promise<NotesApiResponse> {
     const { page = 1, perPage = 12, search = '', tag } = params;
@@ -60,28 +61,27 @@ export const notesService = {
       queryParams.append('tag', tag);
     }
 
-    const response = await externalApi.get<NotesApiResponse>(
+    const response = await apiClient.get<NotesApiResponse>(
       `/notes?${queryParams.toString()}`
     );
     return response.data;
   },
 
   async fetchNoteById(id: string): Promise<Note> {
-    const response = await externalApi.get<Note>(`/notes/${id}`);
+    const response = await apiClient.get<Note>(`/notes/${id}`);
     return response.data;
   },
 
   async createNote(note: CreateNoteParams): Promise<Note> {
-    const response = await externalApi.post<Note>('/notes', note);
+    const response = await apiClient.post<Note>('/notes', note);
     return response.data;
   },
 
   async deleteNote(id: string): Promise<Note> {
-    const response = await externalApi.delete<Note>(`/notes/${id}`);
+    const response = await apiClient.delete<Note>(`/notes/${id}`);
     return response.data;
   },
 };
 
-// Експортуємо окремі функції для зворотної сумісності
-export const { fetchNotes, fetchNoteById, createNote, deleteNote } =
-  notesService;
+
+export const { fetchNotes, fetchNoteById, createNote, deleteNote } = notesService;

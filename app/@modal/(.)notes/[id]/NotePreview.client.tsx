@@ -1,22 +1,21 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { Note } from '@/types/note';
+import { useRouter, useParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import { fetchNoteById } from '@/lib/api/clientApi';
 import Modal from '@/components/Modal/Modal';
 import css from './NotePreview.module.css';
 
-interface NotePreviewProps {
-  note?: Note;
-  isLoading?: boolean;
-  error?: string;
-}
-
-export default function NotePreview({
-  note,
-  isLoading,
-  error,
-}: NotePreviewProps) {
+export default function NotePreview() {
   const router = useRouter();
+  const params = useParams();
+  const noteId = params.id as string;
+
+  const { data: note, isLoading, error } = useQuery({
+    queryKey: ['note', noteId],
+    queryFn: () => fetchNoteById(noteId),
+    enabled: !!noteId,
+  });
 
   const handleClose = () => {
     router.back();
@@ -36,7 +35,7 @@ export default function NotePreview({
     return (
       <Modal onClose={handleClose}>
         <div className={css.preview}>
-          <div className={css.error}>Error loading note: {error}</div>
+          <div className={css.error}>Error loading note</div>
           <div className={css.footer}>
             <button onClick={handleClose} className={css.closeButton}>
               Close

@@ -1,17 +1,18 @@
-import { Metadata } from 'next';
+'use client';
 
-export const metadata: Metadata = {
-  title: {
-    template: '%s | NoteHub',
-    default: 'Authentication | NoteHub',
-  },
-  description: 'Sign in or create an account to access NoteHub',
-};
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.refresh();
+  }, [router]);
+
   return <div className="auth-layout">{children}</div>;
 }

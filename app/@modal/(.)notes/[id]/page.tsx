@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { fetchNoteById } from '@/lib/api/clientApi';
+import { serverNotesService } from '@/lib/api/serverApi';
 import NotePreview from '@/app/@modal/(.)notes/[id]/NotePreview.client';
 import { redirect } from 'next/navigation';
 import type { Note } from '@/types/note';
@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const resolvedParams = await params;
 
   try {
-    const note: Note = await fetchNoteById(resolvedParams.id);
+    const note: Note = await serverNotesService.fetchNoteById(resolvedParams.id);
 
     const description =
       note.content.length > 157
@@ -57,11 +57,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function NoteModalPage({ params }: Props) {
   const resolvedParams = await params;
-  const note = await fetchNoteById(resolvedParams.id);
-
-  if (!note) {
+  try {
+    await serverNotesService.fetchNoteById(resolvedParams.id);
+  } catch {
     redirect('/notes');
   }
 
-  return <NotePreview note={note} />;
+  return <NotePreview />;
 }

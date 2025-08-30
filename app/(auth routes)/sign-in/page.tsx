@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { authService } from '@/lib/api/clientApi';
+import { useAuthStore } from '@/lib/store/authStore';
 import type { AuthCredentials } from '@/types/user';
 import { AxiosError } from 'axios';
 import css from './SignInPage.module.css';
@@ -15,6 +16,7 @@ interface ErrorResponse {
 
 export default function SignInPage() {
   const router = useRouter();
+  const { setUser } = useAuthStore();
   const [formData, setFormData] = useState<AuthCredentials>({
     email: '',
     password: '',
@@ -23,7 +25,11 @@ export default function SignInPage() {
 
   const loginMutation = useMutation({
     mutationFn: authService.login,
-    onSuccess: () => {
+    onSuccess: (data) => {
+     
+      if (data?.user) {
+        setUser(data.user);
+      }
       router.push('/profile');
       router.refresh();
     },

@@ -49,7 +49,7 @@ export default async function ProfilePage() {
         </div>
         <div className={css.avatarWrapper}>
           <Image
-            src="/avatar-placeholder.svg"
+            src={user.avatar || '/avatar-placeholder.svg'}
             alt="User Avatar"
             width={120}
             height={120}
@@ -57,7 +57,7 @@ export default async function ProfilePage() {
           />
         </div>
         <div className={css.profileInfo}>
-          <p>Username: {user.name || 'your_username'}</p>
+          <p>Username: {user.username || 'your_username'}</p>
           <p>Email: {user.email}</p>
         </div>
       </div>
