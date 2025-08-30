@@ -3,37 +3,34 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useMutation } from '@tanstack/react-query';
-import { authService } from '@/lib/api/clientApi';
 import { useAuthStore } from '@/lib/store/authStore';
+import { authService } from '@/lib/api/clientApi';
 import css from './EditProfilePage.module.css';
 
 export default function EditProfilePage() {
   const router = useRouter();
   const { user, setUser } = useAuthStore();
   const [username, setUsername] = useState('');
+  const [isPending, setIsPending] = useState(false);
 
-   useEffect(() => {
+  useEffect(() => {
     if (user?.username) {
       setUsername(user.username);
     }
   }, [user]);
 
-  const updateMutation = useMutation({
-    mutationFn: (username: string) => authService.updateProfile({ username }),
-    onSuccess: (updatedUser) => {
+  async function updateProfile(formData: FormData) {
+    setIsPending(true);
+    try {
+      const newUsername = formData.get('username') as string;
+      const updatedUser = await authService.updateProfile({ username: newUsername });
       setUser(updatedUser);
       router.push('/profile');
-    },
-    onError: (error) => {
+    } catch (error) {
       console.error('Update failed:', error);
-    },
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    updateMutation.mutate(username);
-  };
+      setIsPending(false);
+    }
+  }
 
   const handleCancel = () => {
     router.push('/profile');
@@ -49,22 +46,23 @@ export default function EditProfilePage() {
         <h1 className={css.formTitle}>Edit Profile</h1>
 
         <Image
-          src="https://via.placeholder.com/120x120/cccccc/666666?text=User"
+          src={user.avatar || "https://via.placeholder.com/120x120/cccccc/666666?text=User"}
           alt="User Avatar"
           width={120}
           height={120}
           className={css.avatar}
         />
 
-        <form className={css.profileInfo} onSubmit={handleSubmit}>
+        <form className={css.profileInfo} action={updateProfile}>
           <div className={css.usernameWrapper}>
             <label htmlFor="username">Username:</label>
             <input
               id="username"
+              name="username"
               type="text"
               className={css.input}
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              defaultValue={username}
+              required
             />
           </div>
 
@@ -74,9 +72,9 @@ export default function EditProfilePage() {
             <button
               type="submit"
               className={css.saveButton}
-              disabled={updateMutation.isPending}
+              disabled={isPending}
             >
-              {updateMutation.isPending ? 'Saving...' : 'Save'}
+              {isPending ? 'Saving...' : 'Save'}
             </button>
             <button
               type="button"

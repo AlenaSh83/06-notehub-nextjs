@@ -1,43 +1,30 @@
 import { cookies } from 'next/headers';
-import axios from 'axios';
+import { apiClient } from './api';
 import type { User } from '@/types/user';
 import type { Note } from '@/types/note';
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL + '/api';
-
-
-const serverApiClient = axios.create({
-  baseURL,
-  withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-
-serverApiClient.interceptors.request.use((config) => {
-  const cookieStore = cookies();
-  const cookieHeader = cookieStore.toString();
-  
-  if (cookieHeader) {
-    config.headers.Cookie = cookieHeader;
-  }
-  
-  return config;
-});
-
 export const serverAuthService = {
   async getProfile(): Promise<User> {
-    const { data } = await serverApiClient.get<User>('/users/me');
+    const cookieStore = await cookies();
+    const { data } = await apiClient.get<User>('/users/me', {
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
+    });
     return data;
   },
 
   async getSession() {
+    const cookieStore = await cookies();
     try {
-      const response = await serverApiClient.get('/auth/session');
-      return response; 
-    } catch {
-      return null;
+      const response = await apiClient.get('/auth/session', {
+        headers: {
+          Cookie: cookieStore.toString(),
+        },
+      });
+      return response;
+    } catch (error) {
+      return error;
     }
   },
 };
@@ -49,6 +36,7 @@ export const serverNotesService = {
     search?: string;
     tag?: string;
   }) {
+    const cookieStore = await cookies();
     const queryParams = new URLSearchParams();
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
@@ -59,12 +47,21 @@ export const serverNotesService = {
     }
 
     const query = queryParams.toString();
-    const { data } = await serverApiClient.get(`/notes${query ? `?${query}` : ''}`);
+    const { data } = await apiClient.get(`/notes${query ? `?${query}` : ''}`, {
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
+    });
     return data;
   },
 
   async fetchNoteById(id: string): Promise<Note> {
-    const { data } = await serverApiClient.get<Note>(`/notes/${id}`);
-    return data; 
+    const cookieStore = await cookies();
+    const { data } = await apiClient.get<Note>(`/notes/${id}`, {
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
+    });
+    return data;
   },
 };
