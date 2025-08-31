@@ -18,7 +18,7 @@ export default function NotePreview() {
   });
 
   const handleClose = () => {
-    router.back();
+    router.push('/notes/filter');
   };
 
   if (isLoading) {

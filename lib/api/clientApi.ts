@@ -29,14 +29,19 @@ export const authService = {
     await apiClient.post('/auth/logout');
   },
 
-  async getSession() {
-    try {
-      const { data } = await apiClient.get('/auth/session');
-      return data.user || null;
-    } catch {
-      return null;
+ async getSession() {
+  try {
+    const { data } = await apiClient.get('/auth/session');
+    
+    if (data?.success) {
+      const profileResponse = await apiClient.get('/users/me');
+      return profileResponse.data;
     }
-  },
+    return data?.user || null;
+  } catch {
+    return null;
+  }
+},
   
   async updateProfile(userData: Partial<User>) {
     const { data } = await apiClient.patch('/users/me', userData);
